@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+  <title>Frontend Mentor | Todo app</title>
+</head>
+
+<body class="body">
+  <main class="main">
+    <div class="top-container">
+      <h1 class="top-container__header">todo</h1>
+      <button class="top-container__btn" aria-label="switch dark/light theme" data-theme-switcher
+        data-mode="light"></button>
+    </div>
+    <form class="form" action="" method="get" data-form>
+      <label class="form__label" for="task">create new todo</label>
+      <input class="form__input" type="text" name="task" id="task" placeholder="Create a new todo...">
+    </form>
+    <div class="tasks">
+      <div class="tasks__container" data-tasks-container>
+        <!-- task will be injected here -->
+      </div>
+      <div class="tasks__buttons">
+        <p class="buttons__descp"><span data-tasks-left>0</span><span data-tasks-left-descp> items left</span></p>
+        <div class="buttons__filterings">
+          <button class="btn selected" data-filtering-btn data-btn-all>All</button>
+          <button class="btn" data-filtering-btn data-btn-active>Active</button>
+          <button class="btn" data-filtering-btn data-btn-completed>Completed</button>
+        </div>
+        <button class="buttons__btn btn" data-btn-clear-completed>Clear Completed</button>
+      </div>
+      <p class="tasks__note">Drag and drop to reorder list</p>
+    </div>
+  </main>
+
+  <!-- <div class="attribution">
+    Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
+    Coded by <a href="#">Your Name Here</a>.
+  </div> -->
+</body>
+
+</html>
