@@ -69,6 +69,14 @@ class UI {
             formElement.removeChild(errorMessage);
         }
     }
+
+    static showErrorMessage(message) {
+        let errorMessage = document.createElement("p");
+        errorMessage.classList.add("error--message");
+        errorMessage.textContent = message;
+        formElement.appendChild(errorMessage);
+    }
+
 }
 
 class Tasks {
@@ -103,7 +111,64 @@ class Tasks {
         });
     }
 
+    static createNewTask() {
+        let tasksList = [];
+        document.querySelectorAll(".container__text").forEach(obj => tasksList.push(obj.textContent));
+        if (tasksList.includes(formElement.querySelector("input").value)) {
+            UI.showErrorMessage("Already on the list");
+            return;
+        }
+        if (formElement.querySelector("input").value == "") {
+            UI.showErrorMessage("Please enter text");
+            return;
+        }
+        UI.showTasksContainer();
+        let task = document.createElement("div");
+        task.dataset.Active = 1;
 
+        //drag and drop
+        task.addEventListener("mousedown", (e) => {
+            console.log("d&d");
+        });
+        //drag and drop
+        
+        task.classList.add("container__task");
+
+        let btn = document.createElement("button");
+        btn.classList.add("container__btn");
+        btn.addEventListener("click", (e) => {
+            if (e.target.classList.contains("btn--done")) {
+                e.target.classList.remove("btn--done");
+                e.target.parentNode.querySelector(".container__text").classList.remove("text--done");
+                e.target.parentNode.dataset.Active = 1;
+            } else {
+                e.target.classList.add("btn--done");
+                e.target.parentNode.querySelector(".container__text").classList.add("text--done");
+                e.target.parentNode.dataset.Active = 0;
+            }
+            Tasks.updateTasksLeftDescription();
+        });
+        task.appendChild(btn);
+
+        let text = document.createElement("p");
+        text.classList.add("container__text");
+        text.textContent = formElement.querySelector("input").value;
+        task.appendChild(text);
+
+        let close = document.createElement("button");
+        close.addEventListener("click", (e) => {
+            tasksContainer.removeChild(e.target.parentNode);
+            Tasks.updateTasksLeftDescription();
+            if (document.querySelectorAll(".container__text").length == 0) {
+                UI.hideTasksContainer();
+                UI.removeErrorMessage();
+            }
+        });
+        close.classList.add("container__close");
+
+        task.appendChild(close);
+        tasksContainer.appendChild(task);
+    }
 }
 
 filteringButtons.forEach((btn) => UI.highlightButton(btn));
@@ -111,67 +176,21 @@ filterActiveBtn.addEventListener("click", () => Tasks.filterTasks(0));
 filterCompletedBtn.addEventListener("click", () => Tasks.filterTasks(1));
 filterAllBtn.addEventListener("click", () => Tasks.filterTasks(2));
 
-clearCompletedBtn.addEventListener("click", () => Tasks.clearCompleted());
+clearCompletedBtn.addEventListener("click", () => {
+    Tasks.clearCompleted();
+    if (document.querySelectorAll(".container__text").length == 0) {
+        UI.hideTasksContainer();
+        UI.removeErrorMessage();
+        }
+    }
+);
 
 themeSwitchBtn.addEventListener("click", (e) => UI.changeTheme(e));
 
 formElement.addEventListener("submit", (e) => {
     e.preventDefault();
-    UI.showTasksContainer();
     UI.removeErrorMessage();
-
-    let tasksList = [];
-    document.querySelectorAll(".container__text").forEach(obj => tasksList.push(obj.textContent));
-    if (tasksList.includes(formElement.querySelector("input").value)) {
-        let errorMessage = document.createElement("p");
-        errorMessage.classList.add("error--message");
-        errorMessage.textContent = "This task is already on the list";
-        formElement.appendChild(errorMessage);
-        return;
-    }
-
-    let task = document.createElement("div");
-    task.dataset.Active = 1;
-
-    //drag and drop
-    task.addEventListener("mousedown", (e) => {
-        console.log("d&d");
-
-    });
-    task.classList.add("container__task");
-
-    let btn = document.createElement("button");
-    btn.classList.add("container__btn");
-    btn.addEventListener("click", (e) => {
-        if (e.target.classList.contains("btn--done")) {
-            e.target.classList.remove("btn--done");
-            e.target.parentNode.querySelector(".container__text").classList.remove("text--done");
-            e.target.parentNode.dataset.Active = 1;
-        } else {
-            e.target.classList.add("btn--done");
-            e.target.parentNode.querySelector(".container__text").classList.add("text--done");
-            e.target.parentNode.dataset.Active = 0;
-        }
-        Tasks.updateTasksLeftDescription();
-    });
-    task.appendChild(btn);
-
-    let text = document.createElement("p");
-    text.classList.add("container__text");
-    text.textContent = formElement.querySelector("input").value;
-    task.appendChild(text);
-
-    let close = document.createElement("button");
-    close.addEventListener("click", (e) => {
-        tasksContainer.removeChild(e.target.parentNode);
-        UI.updateTasksLeft();
-    });
-    close.classList.add("container__close");
-
-
-    task.appendChild(close);
-    tasksContainer.appendChild(task);
-
+    Tasks.createNewTask();
     Tasks.updateTasksLeftDescription();
 });
 
