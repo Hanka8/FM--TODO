@@ -264,6 +264,10 @@
     bottom: -50px;
 }
 
+.task--dragging {
+    background-color: var(--border);
+}
+
 @keyframes bounce {
     0% {scale: 1.0;}
     25% {scale: 0.5}

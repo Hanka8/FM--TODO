@@ -111,6 +111,20 @@ class Tasks {
         });
     }
 
+    static getDragAfterElement(container, y) {
+        const draggableElements = [...container.querySelectorAll(".container__task:not(.dragging)")];
+
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
     static createNewTask() {
         let tasksList = [];
         document.querySelectorAll(".container__text").forEach(obj => tasksList.push(obj.textContent));
@@ -123,16 +137,32 @@ class Tasks {
             return;
         }
         UI.showTasksContainer();
+
         let task = document.createElement("div");
         task.dataset.Active = 1;
-
-        //drag and drop
-        task.addEventListener("mousedown", (e) => {
-            console.log("d&d");
-        });
-        //drag and drop
-        
+        task.draggable = true;
         task.classList.add("container__task");
+
+        task.addEventListener("dragstart", (e) => {
+            console.log("dragstart");
+            task.classList.add("task--dragging");
+        });
+        task.addEventListener("dragend", (e) => {
+            console.log("dragend");
+            task.classList.remove("task--dragging");
+        });
+
+        tasksContainer.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            const afterElement = Tasks.getDragAfterElement(tasksContainer, e.clientY);
+            const draggable = document.querySelector(".task--dragging");
+            console.log(afterElement);
+            if (afterElement == null) {
+                tasksContainer.appendChild(draggable);
+            } else {
+                tasksContainer.insertBefore(draggable, afterElement);
+            }
+        });
 
         let btn = document.createElement("button");
         btn.classList.add("container__btn");
