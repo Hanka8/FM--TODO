@@ -184,8 +184,8 @@
 }
 
 @keyframes show {
-    from {height: 0;}
-    to {height: fit-content;}
+    from {transform: scale(0);}
+    to {height: scale(1);}
 }
 
 .container__task:hover .container__close {

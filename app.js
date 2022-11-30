@@ -108,7 +108,8 @@ class Tasks {
             if (task.dataset.Active == 0) {
                 setTimeout(() => { tasksContainer.removeChild(task) }, 200);
                 task.animate([
-                    { height: 0 },
+                    { transform: "skewX(0)" },
+                    { transform: "skewX(90deg)" }
                 ], {
                     duration: 150,
                     iterations: 1,
@@ -162,7 +163,6 @@ class Tasks {
             e.preventDefault();
             const afterElement = Tasks.getDragAfterElement(tasksContainer, e.clientY);
             const draggable = document.querySelector(".task--dragging");
-            console.log(afterElement);
             if (afterElement == null) {
                 tasksContainer.appendChild(draggable);
             } else {
@@ -193,18 +193,23 @@ class Tasks {
 
         let close = document.createElement("button");
         close.addEventListener("click", (e) => {
-            setTimeout(() => { tasksContainer.removeChild(e.target.parentNode) }, 150);
+            // tasksContainer.removeChild(e.target.parentNode);
+            setTimeout(() => { 
+                tasksContainer.removeChild(e.target.parentNode);
+                Tasks.updateTasksLeftDescription();
+                if (document.querySelectorAll(".container__text").length == 0) {
+                    UI.hideTasksContainer();
+                    UI.removeErrorMessage();
+                }
+            }, 100);
             e.target.parentNode.animate([
-                { height: 0 },
+                { height: "auto"},
+                { height: 0 }
             ], {
                 duration: 130,
                 iterations: 1,
             });
-            Tasks.updateTasksLeftDescription();
-            if (document.querySelectorAll(".container__text").length == 0) {
-                UI.hideTasksContainer();
-                UI.removeErrorMessage();
-            }
+            
         });
         close.classList.add("container__close");
 
@@ -234,7 +239,7 @@ themeSwitchBtn.addEventListener("click", (e) => UI.changeTheme(e));
 formElement.addEventListener("submit", (e) => {
     e.preventDefault();
     UI.removeErrorMessage();
-    setTimeout(Tasks.createNewTask, 200);
+    Tasks.createNewTask();
     Tasks.updateTasksLeftDescription();
 });
 
