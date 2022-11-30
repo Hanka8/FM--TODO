@@ -7,8 +7,8 @@ const filterActiveBtn = document.querySelector("[data-btn-active]");
 const filterCompletedBtn = document.querySelector("[data-btn-completed]");
 const filterAllBtn = document.querySelector("[data-btn-all]");
 const clearCompletedBtn = document.querySelector("[data-btn-clear-completed]");
-const numberOfTasksLeftSpan = document.querySelector("[data-tasks-left");
-const numberOfTasksLeftDescpSpan = document.querySelector("[data-tasks-left-descp");
+const numberOfTasksLeftSpan = document.querySelector("[data-tasks-left]");
+const numberOfTasksLeftDescpSpan = document.querySelector("[data-tasks-left-descp]");
 const tasksDiv = document.querySelector(".tasks");
 
 class UI {
@@ -106,7 +106,13 @@ class Tasks {
         let tasks = tasksContainer.querySelectorAll("[data--active]");
         tasks.forEach((task) => {
             if (task.dataset.Active == 0) {
-                tasksContainer.removeChild(task);
+                setTimeout(() => { tasksContainer.removeChild(task) }, 200);
+                task.animate([
+                    { height: 0 },
+                ], {
+                    duration: 150,
+                    iterations: 1,
+                });
             }
         });
     }
@@ -187,7 +193,13 @@ class Tasks {
 
         let close = document.createElement("button");
         close.addEventListener("click", (e) => {
-            tasksContainer.removeChild(e.target.parentNode);
+            setTimeout(() => { tasksContainer.removeChild(e.target.parentNode) }, 150);
+            e.target.parentNode.animate([
+                { height: 0 },
+            ], {
+                duration: 130,
+                iterations: 1,
+            });
             Tasks.updateTasksLeftDescription();
             if (document.querySelectorAll(".container__text").length == 0) {
                 UI.hideTasksContainer();
@@ -198,6 +210,8 @@ class Tasks {
 
         task.appendChild(close);
         tasksContainer.appendChild(task);
+
+        formElement.querySelector("input").value = "";
     }
 }
 
@@ -220,7 +234,7 @@ themeSwitchBtn.addEventListener("click", (e) => UI.changeTheme(e));
 formElement.addEventListener("submit", (e) => {
     e.preventDefault();
     UI.removeErrorMessage();
-    Tasks.createNewTask();
+    setTimeout(Tasks.createNewTask, 200);
     Tasks.updateTasksLeftDescription();
 });
 

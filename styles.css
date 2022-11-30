@@ -125,6 +125,7 @@
     border-radius: 5px;
     margin-top: 24px;
     position: relative;
+    overflow: hidden;
 }
 
 .tasks__buttons {
@@ -177,6 +178,14 @@
     align-items: center;
     padding: 20px 24px;
     position: relative;
+    animation-name: show;
+    animation-duration: 150ms;
+    animation-timing-function: ease-out;
+}
+
+@keyframes show {
+    from {height: 0;}
+    to {height: fit-content;}
 }
 
 .container__task:hover .container__close {
